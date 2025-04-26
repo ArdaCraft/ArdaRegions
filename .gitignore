@@ -1,0 +1,33 @@
+# IDEA config
+.idea/**/*.xml
+!.idea/gradle.xml
+!.idea/misc.xml
+!.idea/vcs.xml
+*.iws
+*.iml
+*.ipr
+.classpath
+.project
+.metadata
+.vscode
+.settings
+
+# Build files
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+output/
+bin/
+classes/
+.gradle/
+
+# Launch files
+run/
+.devauth/microsoft_accounts.json
+*/logs/*
+
+# If you're using MacOS
+.DS_Store

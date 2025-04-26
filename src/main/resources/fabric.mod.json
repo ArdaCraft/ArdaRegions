@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "arda-regions",
+  "version": "${version}",
+  "name": "arda-regions",
+  "description": "",
+  "authors": ["r3signed"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/arda-regions/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.r3signed.ac.regions.client.ArdaRegionsClient"
+    ],
+    "main": [
+      "com.r3signed.ac.regions.ArdaRegions"
+    ]
+  },
+  "mixins": [
+    "arda-regions.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

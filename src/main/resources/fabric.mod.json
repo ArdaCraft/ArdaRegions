@@ -2,27 +2,32 @@
   "schemaVersion": 1,
   "id": "arda-regions",
   "version": "${version}",
-  "name": "arda-regions",
-  "description": "",
-  "authors": ["r3signed"],
-  "contact": {},
-  "license": "All-Rights-Reserved",
+  "name": "ArdaRegions",
+  "description": "A powerful and flexible region management mod for Minecraft.",
+  "authors": [
+    "r3signed"
+  ],
+  "contact": {
+    "sources": "https://github.com/ArdaCraft/ArdaRegions",
+    "issues": "https://github.com/ArdaCraft/ArdaRegions/issues",
+    "discord": "https://discord.com/invite/qcYBkCmAKZ"
+  },
+  "license": "GPL-3.0-or-later",
   "icon": "assets/arda-regions/icon.png",
-  "environment": "*",
   "entrypoints": {
-    "client": [
-      "com.r3signed.ac.regions.client.ArdaRegionsClient"
-    ],
     "main": [
       "com.r3signed.ac.regions.ArdaRegions"
+    ],
+    "client": [
+      "com.r3signed.ac.regions.client.ArdaRegionsClient"
     ]
   },
   "mixins": [
     "arda-regions.mixins.json"
   ],
   "depends": {
+    "minecraft": "${minecraft_version}",
     "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "fabric": "*"
   }
 }

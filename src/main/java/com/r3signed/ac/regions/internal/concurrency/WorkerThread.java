@@ -1,4 +1,4 @@
-package com.r3signed.ac.regions.core.concurrency;
+package com.r3signed.ac.regions.internal.concurrency;
 
 import com.r3signed.ac.regions.ArdaRegions;
 import org.jetbrains.annotations.ApiStatus;
@@ -42,6 +42,15 @@ public class WorkerThread {
      * Executes a task on the worker thread.
      *
      * @param task The task to run
+     */
+    public static <T> void execute(Callable<T> task) {
+        execute(task, null, null);
+    }
+
+    /**
+     * Executes a task on the worker thread.
+     *
+     * @param task The task to run
      * @param onSuccess The callback to run on success
      */
     public static <T> void execute(Callable<T> task, Consumer<T> onSuccess) {
@@ -59,7 +68,9 @@ public class WorkerThread {
         EXECUTOR.submit(() -> {
             try {
                 T result = task.call();
-                onSuccess.accept(result);
+                if (onSuccess != null) {
+                    onSuccess.accept(result);
+                }
             } catch (Exception e) {
                 LOGGER.error("Error executing task on worker thread", e);
                 if (onFail != null) {

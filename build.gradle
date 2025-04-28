@@ -21,6 +21,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "com.google.code.gson:gson:${gson_version}"
 
     modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 

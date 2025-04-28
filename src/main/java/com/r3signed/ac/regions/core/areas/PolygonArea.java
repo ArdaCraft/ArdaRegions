@@ -1,6 +1,6 @@
 package com.r3signed.ac.regions.areas;
 
-import com.r3signed.ac.regions.core.geometry.Triangle;
+import com.r3signed.ac.regions.internal.geometry.Triangle;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashSet;

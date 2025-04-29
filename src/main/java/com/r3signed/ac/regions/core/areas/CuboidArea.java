@@ -1,4 +1,4 @@
-package com.r3signed.ac.regions.areas;
+package com.r3signed.ac.regions.core.areas;
 
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;

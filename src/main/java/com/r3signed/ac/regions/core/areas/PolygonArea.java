@@ -1,4 +1,4 @@
-package com.r3signed.ac.regions.areas;
+package com.r3signed.ac.regions.core.areas;
 
 import com.r3signed.ac.regions.internal.geometry.Triangle;
 import net.minecraft.util.math.Vec3d;

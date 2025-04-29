@@ -1,5 +1,7 @@
 package com.r3signed.ac.regions.areas;
 
+import com.r3signed.ac.regions.core.areas.CuboidArea;
+import com.r3signed.ac.regions.core.areas.PolygonArea;
 import net.minecraft.util.math.Vec3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

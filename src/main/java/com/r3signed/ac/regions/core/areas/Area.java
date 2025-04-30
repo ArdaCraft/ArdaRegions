@@ -1,13 +1,17 @@
 package com.r3signed.ac.regions.core.areas;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.r3signed.ac.regions.internal.data.json.IJson;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 import java.util.UUID;
 
-public abstract class Area {
-    protected final UUID id;
+public abstract class Area implements IJson<JsonObject, Area> {
+    private UUID id;
 
     public Area() {
         // TODO: Check for existing UUIDs
@@ -60,4 +64,22 @@ public abstract class Area {
      * @param other The other area to check
      */
     public abstract boolean intersects(Area other);
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", id.toString());
+        json.addProperty("type", getType().toString().toLowerCase());
+        return json;
+    }
+
+    @Override
+    public Area fromJson(JsonObject json) {
+        if (!json.has("id") || !json.has("type")) {
+            throw new JsonParseException("Invalid area JSON");
+        }
+
+        this.id = UUID.fromString(json.get("id").getAsString());
+        return this;
+    }
 }

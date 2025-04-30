@@ -1,5 +1,8 @@
 package com.r3signed.ac.regions.core.areas;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.r3signed.ac.regions.internal.data.json.Json;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,6 +71,10 @@ public class CuboidArea extends Area {
 
     @Override
     public boolean contains(Vec3d pos) {
+        if (min == null || max == null) {
+            return false;
+        }
+
         return pos.x >= Math.min(min.x, max.x) && pos.x <= Math.max(min.x, max.x) &&
                 pos.y >= Math.min(min.y, max.y) && pos.y <= Math.max(min.y, max.y) &&
                 pos.z >= Math.min(min.z, max.z) && pos.z <= Math.max(min.z, max.z);
@@ -75,6 +82,10 @@ public class CuboidArea extends Area {
 
     @Override
     public boolean intersects(Area other) {
+        if (min == null || max == null) {
+            return false;
+        }
+
         if (other instanceof CuboidArea cuboid) {
             return this.min.x <= cuboid.max.x && this.max.x >= cuboid.min.x &&
                     this.min.y <= cuboid.max.y && this.max.y >= cuboid.min.y &&
@@ -93,5 +104,25 @@ public class CuboidArea extends Area {
         }
 
         return false;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject json = (JsonObject) super.toJson();
+        json.add("min", Json.to(min));
+        json.add("max", Json.to(max));
+        return json;
+    }
+
+    @Override
+    public CuboidArea fromJson(JsonObject json) {
+        super.fromJson(json);
+        if (!json.has("min") || !json.has("max")) {
+            throw new JsonParseException("Invalid cuboid area JSON");
+        }
+
+        this.min = Json.from(json.get("min"), Vec3d.class);
+        this.max = Json.from(json.get("max"), Vec3d.class);
+        return this;
     }
 }

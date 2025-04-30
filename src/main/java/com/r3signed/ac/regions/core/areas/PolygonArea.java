@@ -1,5 +1,10 @@
 package com.r3signed.ac.regions.core.areas;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.r3signed.ac.regions.internal.data.json.Json;
 import com.r3signed.ac.regions.internal.geometry.Triangle;
 import net.minecraft.util.math.Vec3d;
 
@@ -83,5 +88,33 @@ public class PolygonArea extends Area {
         }
 
         return false;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject json = super.toJson();
+        JsonArray pointsArray = new JsonArray();
+        for (Vec3d points : points) {
+            pointsArray.add(Json.to(points));
+        }
+        json.add("points", pointsArray);
+        return json;
+    }
+
+    @Override
+    public PolygonArea fromJson(JsonObject json) {
+        super.fromJson(json);
+        if (!json.has("points")) {
+            throw new JsonParseException("Invalid polygon area JSON");
+        }
+
+        JsonArray pointsArray = json.getAsJsonArray("points");
+        Set<Vec3d> points = new HashSet<>();
+        for (JsonElement element : pointsArray) {
+            points.add(Json.from(element, Vec3d.class));
+        }
+        setPoints(points);
+
+        return this;
     }
 }

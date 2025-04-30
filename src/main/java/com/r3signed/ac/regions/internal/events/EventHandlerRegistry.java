@@ -62,7 +62,7 @@ public class EventHandlerRegistry {
                         new Class<?>[]{eventListener},
                         handler
                 );
-                ArdaRegions.LOGGER.info("Registered event handler for method \"{}\" in class \"{}\"", method.getName(), method.getDeclaringClass().getSimpleName());
+
                 ((Event) eventHandler).register(proxy);
                 registeredMethods.add(method);
             }

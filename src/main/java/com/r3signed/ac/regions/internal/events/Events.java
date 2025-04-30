@@ -1,6 +1,9 @@
 package com.r3signed.ac.regions.internal.events;
 
+import com.r3signed.ac.regions.internal.events.world.ClientWorldEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
 import java.lang.reflect.Method;
@@ -11,7 +14,13 @@ import java.lang.reflect.Modifier;
  */
 public enum Events {
     SERVER_WORLD_LOAD(ServerWorldEvents.LOAD, ServerWorldEvents.Load.class),
-    SERVER_WORLD_UNLOAD(ServerWorldEvents.UNLOAD, ServerWorldEvents.Unload.class);
+    SERVER_WORLD_UNLOAD(ServerWorldEvents.UNLOAD, ServerWorldEvents.Unload.class),
+    SERVER_CHUNK_LOAD(ServerChunkEvents.CHUNK_LOAD, ServerChunkEvents.Load.class),
+    SERVER_CHUNK_UNLOAD(ServerChunkEvents.CHUNK_UNLOAD, ServerChunkEvents.Unload.class),
+    CLIENT_WORLD_LOAD(ClientWorldEvents.LOAD, ClientWorldEvents.Load.class),
+    CLIENT_WORLD_UNLOAD(ClientWorldEvents.UNLOAD, ClientWorldEvents.Unload.class),
+    CLIENT_CHUNK_LOAD(ClientChunkEvents.CHUNK_LOAD, ClientChunkEvents.Load.class),
+    CLIENT_CHUNK_UNLOAD(ClientChunkEvents.CHUNK_UNLOAD, ClientChunkEvents.Unload.class);
 
     private final Event<?> handler;
     private final Class<?> listener;

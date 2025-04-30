@@ -25,7 +25,8 @@ classes/
 .gradle/
 
 # Launch files
-run/
+/run/
+/server/
 .devauth/microsoft_accounts.json
 */logs/*
 

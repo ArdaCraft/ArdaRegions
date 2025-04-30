@@ -43,8 +43,8 @@ public class WorkerThread {
      *
      * @param task The task to run
      */
-    public static <T> void execute(Callable<T> task) {
-        execute(task, null, null);
+    public static void execute(Runnable task) {
+        EXECUTOR.submit(task);
     }
 
     /**

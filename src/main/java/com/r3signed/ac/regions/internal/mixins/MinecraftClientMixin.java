@@ -1,6 +1,6 @@
 package com.r3signed.ac.regions.internal.mixins;
 
-import com.r3signed.ac.regions.internal.events.world.ClientWorldEvents;
+import com.r3signed.ac.regions.core.events.world.ClientWorldEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;

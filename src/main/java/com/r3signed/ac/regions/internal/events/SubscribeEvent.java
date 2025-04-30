@@ -1,5 +1,7 @@
 package com.r3signed.ac.regions.internal.events;
 
+import com.r3signed.ac.regions.core.Side;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,4 +30,10 @@ public @interface SubscribeEvent {
      * The event to subscribe to.
      */
     Events value();
+
+    /**
+     * The side to register the handler on. Defaults to
+     * {@link Side#BOTH}.
+     */
+    Side side() default Side.BOTH;
 }

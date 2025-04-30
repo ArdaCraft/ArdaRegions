@@ -1,6 +1,8 @@
 package com.r3signed.ac.regions.internal.events;
 
 import com.r3signed.ac.regions.ArdaRegions;
+import com.r3signed.ac.regions.core.Side;
+import com.r3signed.ac.regions.utils.McUtils;
 import net.fabricmc.fabric.api.event.Event;
 
 import java.lang.reflect.InaccessibleObjectException;
@@ -27,7 +29,16 @@ public class EventHandlerRegistry {
             }
 
             if (method.isAnnotationPresent(SubscribeEvent.class)) {
-                Events event = method.getAnnotation(SubscribeEvent.class).value();
+                SubscribeEvent annotation = method.getAnnotation(SubscribeEvent.class);
+                Events event = annotation.value();
+                Side side = annotation.side();
+
+                if (side == Side.CLIENT && McUtils.isClient()) {
+                    continue;
+                } else if (side == Side.SERVER && !McUtils.isClient()) {
+                    continue;
+                }
+
                 try {
                     method.setAccessible(true);
                 } catch (InaccessibleObjectException | SecurityException e) {

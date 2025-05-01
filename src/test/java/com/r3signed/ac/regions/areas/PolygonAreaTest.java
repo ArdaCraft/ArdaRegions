@@ -1,17 +1,16 @@
 package com.r3signed.ac.regions.areas;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.r3signed.ac.regions.core.areas.CuboidArea;
 import com.r3signed.ac.regions.core.areas.PolygonArea;
+import java.util.Set;
 import net.minecraft.util.math.Vec3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PolygonAreaTest {
     private PolygonArea area;

@@ -3,8 +3,6 @@ package com.r3signed.ac.regions.internal.events;
 import com.r3signed.ac.regions.ArdaRegions;
 import com.r3signed.ac.regions.core.Side;
 import com.r3signed.ac.regions.utils.McUtils;
-import net.fabricmc.fabric.api.event.Event;
-
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -12,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
+import net.fabricmc.fabric.api.event.Event;
 
 public class EventHandlerRegistry {
     private static final Set<Method> registeredMethods = Collections.newSetFromMap(new WeakHashMap<>());
@@ -78,5 +77,9 @@ public class EventHandlerRegistry {
                 registeredMethods.add(method);
             }
         }
+    }
+
+    public static void unregister(Object object) {
+        // TODO: Implement unregistering of event handlers
     }
 }

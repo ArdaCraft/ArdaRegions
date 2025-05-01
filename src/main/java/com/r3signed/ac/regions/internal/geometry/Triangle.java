@@ -1,9 +1,8 @@
-package com.r3signed.ac.regions.core.geometry;
-
-import net.minecraft.util.math.Vec3d;
+package com.r3signed.ac.regions.internal.geometry;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.minecraft.util.math.Vec3d;
 
 public record Triangle(Vec3d a, Vec3d b, Vec3d c) {
     /**

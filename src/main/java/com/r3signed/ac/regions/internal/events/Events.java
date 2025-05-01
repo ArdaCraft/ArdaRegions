@@ -1,30 +1,34 @@
 package com.r3signed.ac.regions.internal.events;
 
+import com.r3signed.ac.regions.core.events.areas.AreaTickEvents;
 import com.r3signed.ac.regions.core.events.world.ClientWorldEvents;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.function.Supplier;
 
 /**
  * Enum representing the events that can be subscribed to.
  */
 public enum Events {
     /* Server */
-    SERVER_WORLD_LOAD(()->ServerWorldEvents.LOAD, ()->ServerWorldEvents.Load.class),
-    SERVER_WORLD_UNLOAD(()->ServerWorldEvents.UNLOAD, ()->ServerWorldEvents.Unload.class),
-    SEVER_CHUNK_LOAD(()->ServerChunkEvents.CHUNK_LOAD, ()->ServerChunkEvents.Load.class),
-    SERVER_CHUNK_UNLOAD(()->ServerChunkEvents.CHUNK_UNLOAD, ()->ServerChunkEvents.Unload.class),
+    SERVER_WORLD_LOAD(() -> ServerWorldEvents.LOAD, () -> ServerWorldEvents.Load.class),
+    SERVER_WORLD_UNLOAD(() -> ServerWorldEvents.UNLOAD, () -> ServerWorldEvents.Unload.class),
+    SERVER_CHUNK_LOAD(() -> ServerChunkEvents.CHUNK_LOAD, () -> ServerChunkEvents.Load.class),
+    SERVER_CHUNK_UNLOAD(() -> ServerChunkEvents.CHUNK_UNLOAD, () -> ServerChunkEvents.Unload.class),
 
     /* Client */
-    CLIENT_WORLD_LOAD(()->ClientWorldEvents.LOAD, ()->ClientWorldEvents.Load.class),
-    CLIENT_WORLD_UNLOAD(()->ClientWorldEvents.UNLOAD, ()->ClientWorldEvents.Unload.class),
-    CLIENT_CHUNK_LOAD(()->ClientChunkEvents.CHUNK_LOAD, ()->ClientChunkEvents.Load.class),
-    CLIENT_CHUNK_UNLOAD(()->ClientChunkEvents.CHUNK_UNLOAD, ()->ClientChunkEvents.Unload.class);
+    CLIENT_WORLD_LOAD(() -> ClientWorldEvents.LOAD, () -> ClientWorldEvents.Load.class),
+    CLIENT_WORLD_UNLOAD(() -> ClientWorldEvents.UNLOAD, () -> ClientWorldEvents.Unload.class),
+    CLIENT_CHUNK_LOAD(() -> ClientChunkEvents.CHUNK_LOAD, () -> ClientChunkEvents.Load.class),
+    CLIENT_CHUNK_UNLOAD(() -> ClientChunkEvents.CHUNK_UNLOAD, () -> ClientChunkEvents.Unload.class),
+
+    /* Shared */
+    AREA_TICKING_START(() -> AreaTickEvents.START, () -> AreaTickEvents.Start.class),
+    AREA_TICKING_STOP(() -> AreaTickEvents.STOP, () -> AreaTickEvents.Stop.class);
 
     // We provide these as suppliers to avoid loading client-side classes on the server
     private final Supplier<Event<?>> handler;

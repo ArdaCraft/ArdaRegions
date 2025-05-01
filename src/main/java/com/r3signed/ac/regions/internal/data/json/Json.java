@@ -6,12 +6,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.r3signed.ac.regions.ArdaRegions;
 import com.r3signed.ac.regions.internal.data.json.serializers.Vec3dSerializer;
-import net.minecraft.util.math.Vec3d;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import net.minecraft.util.math.Vec3d;
 
 public class Json {
     public static final Gson GSON = new GsonBuilder()

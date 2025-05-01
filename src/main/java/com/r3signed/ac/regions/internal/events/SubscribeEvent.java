@@ -1,7 +1,6 @@
 package com.r3signed.ac.regions.internal.events;
 
 import com.r3signed.ac.regions.core.Side;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

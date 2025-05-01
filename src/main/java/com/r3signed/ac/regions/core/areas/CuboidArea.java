@@ -3,10 +3,11 @@ package com.r3signed.ac.regions.core.areas;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.r3signed.ac.regions.internal.data.json.Json;
+import java.util.HashSet;
+import java.util.Set;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Set;
 
 public class CuboidArea extends Area {
     private Vec3d min;
@@ -75,9 +76,7 @@ public class CuboidArea extends Area {
             return false;
         }
 
-        return pos.x >= Math.min(min.x, max.x) && pos.x <= Math.max(min.x, max.x) &&
-                pos.y >= Math.min(min.y, max.y) && pos.y <= Math.max(min.y, max.y) &&
-                pos.z >= Math.min(min.z, max.z) && pos.z <= Math.max(min.z, max.z);
+        return pos.x >= min.x && pos.x <= max.x && pos.y >= min.y && pos.y <= max.y && pos.z >= min.z && pos.z <= max.z;
     }
 
     @Override
@@ -87,9 +86,12 @@ public class CuboidArea extends Area {
         }
 
         if (other instanceof CuboidArea cuboid) {
-            return this.min.x <= cuboid.max.x && this.max.x >= cuboid.min.x &&
-                    this.min.y <= cuboid.max.y && this.max.y >= cuboid.min.y &&
-                    this.min.z <= cuboid.max.z && this.max.z >= cuboid.min.z;
+            return min.x <= cuboid.max.x
+                    && max.x >= cuboid.min.x
+                    && min.y <= cuboid.max.y
+                    && max.y >= cuboid.min.y
+                    && min.z <= cuboid.max.z
+                    && max.z >= cuboid.min.z;
         } else if (other instanceof PolygonArea polygon) {
             for (Vec3d point : getPoints()) {
                 if (polygon.contains(point)) {
@@ -107,8 +109,29 @@ public class CuboidArea extends Area {
     }
 
     @Override
+    protected Set<ChunkPos> calculateChunkMap() {
+        if (min == null || max == null) {
+            return Set.of();
+        }
+
+        int minChunkX = (int) Math.floor(min.x / 16);
+        int minChunkZ = (int) Math.floor(min.z / 16);
+        int maxChunkX = (int) Math.floor(max.x / 16);
+        int maxChunkZ = (int) Math.floor(max.z / 16);
+
+        Set<ChunkPos> chunks = new HashSet<>();
+        for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+            for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+                chunks.add(new ChunkPos(cx, cz));
+            }
+        }
+
+        return chunks;
+    }
+
+    @Override
     public JsonObject toJson() {
-        JsonObject json = (JsonObject) super.toJson();
+        JsonObject json = super.toJson();
         json.add("min", Json.to(min));
         json.add("max", Json.to(max));
         return json;

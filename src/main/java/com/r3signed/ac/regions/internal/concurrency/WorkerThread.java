@@ -1,21 +1,23 @@
 package com.r3signed.ac.regions.internal.concurrency;
 
 import com.r3signed.ac.regions.ArdaRegions;
-import org.jetbrains.annotations.ApiStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.ApiStatus;
+import org.slf4j.Logger;
 
 // TODO: Add alternative pools, e.g. ForkJoin, for more complex tasks
 @ApiStatus.Internal
 public class WorkerThread {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArdaRegions.MOD_NAME + "/WorkerThread");
-    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Logger LOGGER = ArdaRegions.LOGGER;
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "Regions Thread");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     /*
      * Shutdown hook to ensure the thread is terminated on exit.

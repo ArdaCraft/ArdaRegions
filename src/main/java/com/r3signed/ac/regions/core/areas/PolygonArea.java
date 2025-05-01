@@ -6,10 +6,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.r3signed.ac.regions.internal.data.json.Json;
 import com.r3signed.ac.regions.internal.geometry.Triangle;
-import net.minecraft.util.math.Vec3d;
-
 import java.util.HashSet;
 import java.util.Set;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 
 public class PolygonArea extends Area {
     private Set<Vec3d> points = Set.of();
@@ -88,6 +88,44 @@ public class PolygonArea extends Area {
         }
 
         return false;
+    }
+
+    // TODO: Currently gets AABB and calculates chunks from that. This is not correct, but it works for now.
+    @Override
+    protected Set<ChunkPos> calculateChunkMap() {
+        if (points.isEmpty()) {
+            return Set.of();
+        }
+
+        double minX = Double.MAX_VALUE;
+        double minZ = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double maxZ = Double.MIN_VALUE;
+
+        for (Vec3d point : points) {
+            minX = Math.min(minX, point.x);
+            minZ = Math.min(minZ, point.z);
+            maxX = Math.max(maxX, point.x);
+            maxZ = Math.max(maxZ, point.z);
+        }
+
+        if (minX > maxX || minZ > maxZ) {
+            return Set.of();
+        }
+
+        int minChunkX = (int) Math.floor(minX / 16);
+        int minChunkZ = (int) Math.floor(minZ / 16);
+        int maxChunkX = (int) Math.floor(maxX / 16);
+        int maxChunkZ = (int) Math.floor(maxZ / 16);
+
+        Set<ChunkPos> chunks = new HashSet<>();
+        for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+            for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+                chunks.add(new ChunkPos(cx, cz));
+            }
+        }
+
+        return chunks;
     }
 
     @Override

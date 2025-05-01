@@ -7,9 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import net.minecraft.util.math.Vec3d;
-
 import java.lang.reflect.Type;
+import net.minecraft.util.math.Vec3d;
 
 public class Vec3dSerializer implements JsonSerializer<Vec3d>, JsonDeserializer<Vec3d> {
     @Override

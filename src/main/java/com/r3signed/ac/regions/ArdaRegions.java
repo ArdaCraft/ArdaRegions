@@ -1,8 +1,10 @@
 package com.r3signed.ac.regions;
 
 import com.r3signed.ac.regions.core.ServerServices;
+import com.r3signed.ac.regions.internal.command.CommandRegistration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,5 +19,10 @@ public class ArdaRegions implements ModInitializer {
     @Override
     public void onInitialize() {
         ServerServices.init();
+        CommandRegistration.init();
+    }
+
+    public static Identifier getId(String path) {
+        return Identifier.of(MOD_ID, path);
     }
 }

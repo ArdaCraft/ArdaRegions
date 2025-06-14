@@ -7,6 +7,8 @@ import com.r3signed.ac.regions.core.areas.CuboidArea;
 import com.r3signed.ac.regions.core.areas.PolygonArea;
 import com.r3signed.ac.regions.internal.geometry.Triangle;
 import com.r3signed.ac.regions.utils.UnorderedPair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.Camera;
@@ -18,6 +20,7 @@ import org.joml.Matrix4f;
 
 import java.util.HashSet;
 
+@Environment(EnvType.CLIENT)
 public class RegionRenderer {
     public static void init() {
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(RegionRenderer::renderRegionDebug);

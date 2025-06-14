@@ -1,5 +1,6 @@
 package com.r3signed.ac.regions.core.item;
 
+import com.r3signed.ac.regions.ArdaRegions;
 import com.r3signed.ac.regions.api.data.WorldAreaCache;
 import com.r3signed.ac.regions.core.ServerServices;
 import com.r3signed.ac.regions.core.areas.PolygonArea;
@@ -35,7 +36,9 @@ public class PolygonDebugItem extends AbstractRegionDebugItem<PolygonArea> {
         }
         this.getRegion(stack).ifPresent(polygonArea -> {
             WorldAreaCache cache = ServerServices.AREAS.getCache(world);
-            if (cache != null) {
+            if (cache == null) {
+                ArdaRegions.LOGGER.error("World not found in cache");
+            } else {
                 cache.add(polygonArea);
                 if (syncTarget != null) {
                     ServerPlayNetworking.send(syncTarget, new AddPolygonPacket(polygonArea));

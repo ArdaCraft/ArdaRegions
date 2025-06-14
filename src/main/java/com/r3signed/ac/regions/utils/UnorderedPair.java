@@ -17,6 +17,11 @@ public record UnorderedPair<T>(T first, T second) {
     }
 
     @Override
+    public int hashCode() {
+        return first.hashCode() + second.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "UnorderedPair{" + first + ", " + second + '}';
     }

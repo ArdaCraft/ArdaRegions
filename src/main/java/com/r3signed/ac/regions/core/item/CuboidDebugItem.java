@@ -1,5 +1,6 @@
 package com.r3signed.ac.regions.core.item;
 
+import com.r3signed.ac.regions.ArdaRegions;
 import com.r3signed.ac.regions.api.data.WorldAreaCache;
 import com.r3signed.ac.regions.core.ServerServices;
 import com.r3signed.ac.regions.core.areas.CuboidArea;
@@ -61,7 +62,9 @@ public class CuboidDebugItem extends AbstractRegionDebugItem<CuboidArea> {
         }
         this.getRegion(stack).ifPresent(cuboidArea -> {
             WorldAreaCache cache = ServerServices.AREAS.getCache(world);
-            if (cache != null) {
+            if (cache == null) {
+                ArdaRegions.LOGGER.error("World not found in cache");
+            } else {
                 cache.add(cuboidArea);
                 if (syncTarget != null) {
                     ServerPlayNetworking.send(syncTarget, new AddCuboidPacket(cuboidArea));

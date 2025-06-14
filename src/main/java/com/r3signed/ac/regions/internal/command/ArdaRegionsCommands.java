@@ -25,14 +25,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.HashSet;
 
-public class CommandRegistration {
+public class ArdaRegionsCommands {
     private static final SimpleCommandExceptionType NOT_IMPLEMENTED =
             new SimpleCommandExceptionType(Text.literal("Feature not implemented yet"));
     private static final SimpleCommandExceptionType NOT_INITIALIZED =
             new SimpleCommandExceptionType(Text.literal("Data Structure not initialized yet"));
 
     public static void init() {
-        CommandRegistrationCallback.EVENT.register(CommandRegistration::addRegion);
+        CommandRegistrationCallback.EVENT.register(ArdaRegionsCommands::addRegion);
     }
 
     private static void addRegion(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess,

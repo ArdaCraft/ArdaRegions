@@ -2,7 +2,7 @@ package com.r3signed.ac.regions.core.areas;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.r3signed.ac.regions.internal.command.CommandRegistration;
+import com.r3signed.ac.regions.internal.command.ArdaRegionsCommands;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.StringIdentifiable;
@@ -15,7 +15,7 @@ public enum AreaType implements StringIdentifiable {
     CUBOID(builder -> builder.then(argument("pointA", Vec3ArgumentType.vec3())
             .then(argument("pointB", Vec3ArgumentType.vec3())
                     .then(argument("shouldSync", BoolArgumentType.bool())
-                            .executes(CommandRegistration::createCuboid))
+                            .executes(ArdaRegionsCommands::createCuboid))
             )
     )),
     POLYGON(builder -> builder.then(argument("pointA", Vec3ArgumentType.vec3())
@@ -23,7 +23,7 @@ public enum AreaType implements StringIdentifiable {
                     .then(argument("pointC", Vec3ArgumentType.vec3())
                             .then(argument("pointD", Vec3ArgumentType.vec3())
                                     .then(argument("shouldSync", BoolArgumentType.bool())
-                                            .executes(CommandRegistration::createPolygon))
+                                            .executes(ArdaRegionsCommands::createPolygon))
 
                             )
                     )

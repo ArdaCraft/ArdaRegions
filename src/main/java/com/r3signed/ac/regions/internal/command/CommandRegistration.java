@@ -10,7 +10,9 @@ import com.r3signed.ac.regions.api.data.WorldAreaCache;
 import com.r3signed.ac.regions.core.ServerServices;
 import com.r3signed.ac.regions.core.areas.AreaType;
 import com.r3signed.ac.regions.core.areas.CuboidArea;
+import com.r3signed.ac.regions.core.areas.PolygonArea;
 import com.r3signed.ac.regions.internal.network.packet.AddCuboidPacket;
+import com.r3signed.ac.regions.internal.network.packet.AddPolygonPacket;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.CommandRegistryAccess;
@@ -20,6 +22,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.HashSet;
 
 public class CommandRegistration {
     private static final SimpleCommandExceptionType NOT_IMPLEMENTED =
@@ -65,6 +69,21 @@ public class CommandRegistration {
     }
 
     public static int createPolygon(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        throw NOT_IMPLEMENTED.create();
+        WorldAreaCache cache = ServerServices.AREAS.getCache(context.getSource().getWorld());
+        if (cache == null) {
+            throw NOT_INITIALIZED.create();
+        }
+        HashSet<Vec3d> points = new HashSet<>();
+        points.add(Vec3ArgumentType.getVec3(context, "pointA"));
+        points.add(Vec3ArgumentType.getVec3(context, "pointB"));
+        points.add(Vec3ArgumentType.getVec3(context, "pointC"));
+        points.add(Vec3ArgumentType.getVec3(context, "pointD"));
+        PolygonArea area = new PolygonArea();
+        area.setPoints(points);
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (player != null && BoolArgumentType.getBool(context, "shouldSync")) {
+            ServerPlayNetworking.send(player, new AddPolygonPacket(area));
+        }
+        return 1;
     }
 }

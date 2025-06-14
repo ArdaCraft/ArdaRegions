@@ -18,7 +18,17 @@ public enum AreaType implements StringIdentifiable {
                             .executes(CommandRegistration::createCuboid))
             )
     )),
-    POLYGON(builder -> builder.executes(CommandRegistration::createPolygon));
+    POLYGON(builder -> builder.then(argument("pointA", Vec3ArgumentType.vec3())
+            .then(argument("pointB", Vec3ArgumentType.vec3())
+                    .then(argument("pointC", Vec3ArgumentType.vec3())
+                            .then(argument("pointD", Vec3ArgumentType.vec3())
+                                    .then(argument("shouldSync", BoolArgumentType.bool())
+                                            .executes(CommandRegistration::createPolygon))
+
+                            )
+                    )
+            )
+    ));
 
     private final Consumer<LiteralArgumentBuilder<ServerCommandSource>> commandSupplier;
 

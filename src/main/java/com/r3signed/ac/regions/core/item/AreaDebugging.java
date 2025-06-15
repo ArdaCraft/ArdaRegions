@@ -8,13 +8,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 public interface AreaDebugging<T extends Area> {
-    void addPoint(ItemStack stack, World world, @Nullable PlayerEntity player, Vec3d... points);
+    void addPointToStack(ItemStack stack, World world, @Nullable PlayerEntity player, Vec3d... points);
 
-    HashSet<Vec3d> getPoints(ItemStack stack);
+    void removePointFromStack(ItemStack stack, World world, @Nullable PlayerEntity player, Vec3d... points);
+
+    List<Vec3d> getPoints(ItemStack stack);
 
     Optional<T> getRegion(ItemStack stack);
 

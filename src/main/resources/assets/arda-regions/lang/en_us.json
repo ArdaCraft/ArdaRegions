@@ -2,11 +2,13 @@
   "itemGroup.arda-regions.debug": "Debug Items",
   "item.arda-regions.debug_polygon": "Polygon Debug Tool",
   "item.arda-regions.debug_cuboid": "Cuboid Debug Tool",
+
   "info.arda-regions.polygon.save": "Saved Polygon area",
   "info.arda-regions.cuboid.save": "Saved Cuboid area",
   "info.arda-regions.point.add": "Added point [%s %s %s] to area",
-  "tooltip.arda-regions.debug_tool.line0": "§6[Right click]§r on Block to add point",
-  "tooltip.arda-regions.debug_tool.line1": "§6[Right click]§r in Air to add point at current position",
-  "tooltip.arda-regions.debug_tool.line2": "§6[Sneak]§r + §6[Right click]§r to finish area",
-  "tooltip.arda-regions.debug_tool.line3": "§6[Scroll]§r to finish area"
+  "info.arda-regions.debug_tool.mode": "Selected Mode: [%s]",
+
+  "tooltip.arda-regions.debug_tool.mode": "Selected Mode: [%s]",
+  "tooltip.arda-regions.debug_tool.line0": "§6[Right click]§r to use selected mode",
+  "tooltip.arda-regions.debug_tool.line1": "§6[Sneak]§r + §6[Right click]§r to switch modes"
 }

@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 public class PolygonDebugItem extends AbstractRegionDebugItem<PolygonArea> {
@@ -25,7 +26,7 @@ public class PolygonDebugItem extends AbstractRegionDebugItem<PolygonArea> {
             return Optional.empty();
         }
         PolygonArea area = new PolygonArea();
-        area.setPoints(getPoints(stack));
+        area.setPoints(new HashSet<>(getPoints(stack)));
         return Optional.of(area);
     }
 

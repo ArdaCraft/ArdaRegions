@@ -82,7 +82,7 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
         if (user.isSneaking()) {
             Mode newMode = Mode.next(stack, Mode.getMode(stack));
             if (!world.isClient()) {
-                user.sendMessage(Text.translatable("info.arda-regions.debug_tool.mode", newMode.asString().toUpperCase(Locale.ROOT), true));
+                user.sendMessage(Text.translatable("info.arda-regions.debug_tool.mode", newMode.asString().toUpperCase(Locale.ROOT)), true);
             }
         } else {
             Mode mode = Mode.getMode(stack);

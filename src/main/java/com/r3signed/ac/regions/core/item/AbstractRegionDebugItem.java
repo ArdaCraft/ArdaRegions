@@ -83,6 +83,7 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
             Mode newMode = Mode.next(stack, Mode.getMode(stack));
             if (!world.isClient()) {
                 user.sendMessage(Text.translatable("info.arda-regions.debug_tool.mode", newMode.asString().toUpperCase(Locale.ROOT)), true);
+                cooldown(user, 10);
             }
         } else {
             Mode mode = Mode.getMode(stack);
@@ -94,6 +95,11 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
                 }
             }
         }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    protected void cooldown(PlayerEntity player, int ticks) {
+        player.getItemCooldownManager().set(this, ticks);
     }
 
     @Override

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "arda-regions:item/plus",
+    "layer0": "arda-regions:item/minus",
     "layer1": "minecraft:item/stick"
   }
 }

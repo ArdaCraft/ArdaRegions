@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public abstract class AbstractRegionDebugItem<T extends Area> extends Item implements AreaDebugging<T> {
+public abstract class AbstractRegionDebugItem<T extends Area> extends Item implements AreaDebugging {
     public AbstractRegionDebugItem() {
         super(new Settings().maxCount(1));
     }
@@ -36,7 +36,6 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         NbtCompound nbt = stack.getNbt();
         boolean wasSelected = nbt != null && nbt.contains(NbtKeys.SELECTED_BUFFER) && nbt.getBoolean(NbtKeys.SELECTED_BUFFER);
-
         if (wasSelected != selected) {
             finishRegion(stack, world, entity instanceof ServerPlayerEntity player ? player : null);
             stack.getOrCreateNbt().putBoolean(NbtKeys.SELECTED_BUFFER, selected);
@@ -77,32 +76,30 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
             return;
         }
         if (stack.getNbt() == null || !stack.getNbt().contains(NbtKeys.MODE)) {
-            Mode.setMode(stack, Mode.ADD);
+            Mode.setMode(stack, Mode.ADD, user);
         }
         if (user.isSneaking()) {
-            Mode newMode = Mode.next(stack, Mode.getMode(stack));
-            if (!world.isClient()) {
-                user.sendMessage(Text.translatable("info.arda-regions.debug_tool.mode", newMode.asString().toUpperCase(Locale.ROOT)), true);
-                cooldown(user, 10);
-            }
+            Mode.next(stack, Mode.getMode(stack), user);
         } else {
             Mode mode = Mode.getMode(stack);
             if (mode != null) {
                 switch (mode) {
                     case ADD -> addPointToStack(stack, world, user, pos);
                     case REMOVE -> removePointFromStack(stack, world, user, pos);
-                    case SAVE -> finishRegion(stack, world, user instanceof ServerPlayerEntity player ? player : null);
+                    case SAVE -> {
+                        finishRegion(stack, world, user instanceof ServerPlayerEntity player ? player : null);
+                        Mode.setMode(stack, Mode.ADD, user);
+                    }
                 }
             }
         }
     }
 
     @SuppressWarnings("SameParameterValue")
-    protected void cooldown(PlayerEntity player, int ticks) {
+    public void cooldown(PlayerEntity player, int ticks) {
         player.getItemCooldownManager().set(this, ticks);
     }
 
-    @Override
     public void addPointToStack(ItemStack stack, World world, @Nullable PlayerEntity player, Vec3d... points) {
         NbtCompound nbt = stack.getOrCreateNbt();
         NbtList pointsNbt = nbt.contains(NbtKeys.POINTS) ? nbt.getList(NbtKeys.POINTS, NbtElement.COMPOUND_TYPE) : new NbtList();
@@ -120,7 +117,6 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
         nbt.put(NbtKeys.POINTS, pointsNbt);
     }
 
-    @Override
     public void removePointFromStack(ItemStack stack, World world, @Nullable PlayerEntity player, Vec3d... requestedPoints) {
         NbtCompound nbt = stack.getNbt();
         if (nbt == null || !nbt.contains(NbtKeys.POINTS)) return;
@@ -146,7 +142,6 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
         nbt.getList(NbtKeys.POINTS, NbtElement.COMPOUND_TYPE).remove(storedPoints.indexOf(closestStoredPoint));
     }
 
-    @Override
     public List<Vec3d> getPoints(ItemStack stack) {
         List<Vec3d> points = new ArrayList<>();
         NbtCompound nbt = stack.getNbt();
@@ -162,10 +157,8 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
         return points;
     }
 
-    @Override
     public abstract Optional<T> getRegion(ItemStack stack);
 
-    @Override
     public abstract void finishRegion(ItemStack stack, World world, @Nullable ServerPlayerEntity syncTarget);
 
     public enum Mode implements StringIdentifiable {
@@ -193,8 +186,21 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
             return fromString(nbt.getString(NbtKeys.MODE));
         }
 
-        public static void setMode(ItemStack stack, Mode mode) {
+        /**
+         * Sets the new Debug Mode on an ItemStack
+         *
+         * @param stack  Stack, which will be modified
+         * @param mode   new Mode for the ItemStack
+         * @param player if not null, will display info message for them and set the item on short cooldown
+         */
+        public static void setMode(ItemStack stack, Mode mode, @Nullable PlayerEntity player) {
             stack.getOrCreateNbt().putString(NbtKeys.MODE, mode.asString());
+            if (player != null && !player.getWorld().isClient()) {
+                player.sendMessage(Text.translatable("info.arda-regions.debug_tool.mode", mode.asString().toUpperCase(Locale.ROOT)), true);
+                if (stack.getItem() instanceof AbstractRegionDebugItem<?> debugItem) {
+                    debugItem.cooldown(player, 5);
+                }
+            }
         }
 
         /**
@@ -202,14 +208,14 @@ public abstract class AbstractRegionDebugItem<T extends Area> extends Item imple
          * @return next entry in the {@link Mode} enum
          */
         @SuppressWarnings("UnusedReturnValue")
-        public static Mode next(@Nullable ItemStack printStack, @Nullable Mode mode) {
+        public static Mode next(@Nullable ItemStack printStack, @Nullable Mode mode, @Nullable PlayerEntity player) {
             int newOrdinal = mode == null ? 0 : mode.ordinal() + 1;
             if (newOrdinal >= Mode.values().length) {
                 newOrdinal = 0;
             }
             Mode newMode = Mode.values()[newOrdinal];
             if (printStack != null) {
-                setMode(printStack, newMode);
+                setMode(printStack, newMode, player);
             }
             return newMode;
         }

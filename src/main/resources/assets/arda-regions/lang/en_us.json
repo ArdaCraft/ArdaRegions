@@ -2,6 +2,7 @@
   "itemGroup.arda-regions.debug": "Debug Items",
   "item.arda-regions.debug_polygon": "Polygon Debug Tool",
   "item.arda-regions.debug_cuboid": "Cuboid Debug Tool",
+  "item.arda-regions.debug_delete": "Delete Area Debug Tool",
 
   "info.arda-regions.polygon.save": "Saved Polygon area",
   "info.arda-regions.cuboid.save": "Saved Cuboid area",

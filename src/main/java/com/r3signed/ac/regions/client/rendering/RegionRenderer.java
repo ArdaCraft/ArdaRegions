@@ -5,7 +5,9 @@ import com.r3signed.ac.regions.client.core.ClientServices;
 import com.r3signed.ac.regions.core.areas.Area;
 import com.r3signed.ac.regions.core.areas.CuboidArea;
 import com.r3signed.ac.regions.core.areas.PolygonArea;
+import com.r3signed.ac.regions.core.item.AbstractRegionDebugItem;
 import com.r3signed.ac.regions.core.item.AreaDebugging;
+import com.r3signed.ac.regions.core.item.DeleteAreaDebugItem;
 import com.r3signed.ac.regions.internal.geometry.Triangle;
 import com.r3signed.ac.regions.utils.UnorderedPair;
 import net.fabricmc.api.EnvType;
@@ -22,9 +24,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class RegionRenderer {
@@ -38,16 +44,22 @@ public class RegionRenderer {
         Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
         VertexConsumerProvider vertexConsumerProvider = context.consumers();
         if (vertexConsumerProvider == null) return;
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
 
-        for (Area area : cache.getAreas()) {
-            if (area instanceof PolygonArea polygonArea) {
-                RegionRenderer.renderPolygon(polygonArea, matrix, context.camera(), vertexConsumerProvider);
-            } else if (area instanceof CuboidArea cuboidArea) {
-                RegionRenderer.renderCuboid(cuboidArea, matrix, context.camera(), vertexConsumerProvider);
+        if (player != null) {
+            if (player.getMainHandStack().getItem() instanceof AreaDebugging || player.getOffHandStack().getItem() instanceof AreaDebugging) {
+                for (Area area : cache.getAreas()) {
+                    if (area instanceof PolygonArea polygonArea) {
+                        RegionRenderer.renderPolygon(polygonArea, matrix, context.camera(), vertexConsumerProvider);
+                    } else if (area instanceof CuboidArea cuboidArea) {
+                        RegionRenderer.renderCuboid(cuboidArea, matrix, context.camera(), vertexConsumerProvider);
+                    }
+                }
             }
         }
-
-        RegionRenderer.renderTempPoints(matrix, context.camera(), vertexConsumerProvider);
+        renderTempPoints(matrix, context.camera(), vertexConsumerProvider, player);
+        renderDeletionPoints(matrix, context.camera(), vertexConsumerProvider, player);
     }
 
     private static void renderCuboid(CuboidArea area, Matrix4f matrix, Camera camera, VertexConsumerProvider provider) {
@@ -99,16 +111,39 @@ public class RegionRenderer {
         }
     }
 
-    private static void renderTempPoints(Matrix4f matrix, Camera camera, VertexConsumerProvider provider) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+    private static void renderTempPoints(Matrix4f matrix, Camera camera, VertexConsumerProvider provider, @Nullable ClientPlayerEntity player) {
         if (player == null) return;
         ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
-        if (!(stack.getItem() instanceof AreaDebugging<?> debugTool)) return;
+        if (!(stack.getItem() instanceof AbstractRegionDebugItem<?> debugTool)) return;
+        renderPoints(matrix, camera, provider, debugTool.getPoints(stack));
+    }
+
+    private static void renderDeletionPoints(Matrix4f matrix, Camera camera, VertexConsumerProvider provider, ClientPlayerEntity player) {
+        if (player == null) return;
+        ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+        if (!(stack.getItem() instanceof DeleteAreaDebugItem)) {
+            stack = player.getStackInHand(Hand.OFF_HAND);
+            if (!(stack.getItem() instanceof DeleteAreaDebugItem)) {
+                return;
+            }
+        }
+        List<Vec3d> points = new ArrayList<>();
+        Optional.ofNullable(ClientServices.AREAS.getCache(player.getWorld()))
+                .ifPresent(cache -> cache.getAreas().forEach(area -> {
+                    if (area instanceof PolygonArea polygon) {
+                        points.addAll(polygon.getPoints());
+                    } else if (area instanceof CuboidArea cuboid) {
+                        points.addAll(cuboid.getPoints());
+                    }
+                }));
+        renderPoints(matrix, camera, provider, points);
+    }
+
+    private static void renderPoints(Matrix4f matrix, Camera camera, VertexConsumerProvider provider, List<Vec3d> points) {
         double crossSize = 0.25;
         int color = 0xFF0000FF;
 
-        for (Vec3d center : debugTool.getPoints(stack)) {
+        for (Vec3d center : points) {
             for (UnorderedPair<Vec3d> entry : getCross(center, crossSize)) {
                 VertexConsumer consumer = provider.getBuffer(RenderLayer.getDebugLineStrip(1.0));
                 Vec3d start = entry.first().subtract(camera.getPos());
